@@ -168,6 +168,7 @@
 
             if (action) {
                 this.execAction(action);
+                this.trigger('externalInteraction', {}, this.base.getFocusedElement());
             }
         },
 
