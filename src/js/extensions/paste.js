@@ -550,7 +550,11 @@
 
             MediumEditor.util.insertHTMLCommand(
                 this.document,
+                /*
+                this replace caused issues with #2477
                 fragmentBody.innerHTML.replace(/&nbsp;/g, " ")
+                */
+                fragmentBody.innerHTML
             );
         },
 
