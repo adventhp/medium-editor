@@ -406,8 +406,8 @@ function MediumEditor(elements, options) {
 
 MediumEditor.extensions = {};
 /*jshint unused: true */
-(function (window) {
-    'use strict';
+(function(window) {
+    "use strict";
 
     function copyInto(overwrite, dest) {
         var prop,
@@ -417,9 +417,11 @@ MediumEditor.extensions = {};
             var source = sources[i];
             if (source) {
                 for (prop in source) {
-                    if (source.hasOwnProperty(prop) &&
-                        typeof source[prop] !== 'undefined' &&
-                        (overwrite || dest.hasOwnProperty(prop) === false)) {
+                    if (
+                        source.hasOwnProperty(prop) &&
+                        typeof source[prop] !== "undefined" &&
+                        (overwrite || dest.hasOwnProperty(prop) === false)
+                    ) {
                         dest[prop] = source[prop];
                     }
                 }
@@ -434,25 +436,29 @@ MediumEditor.extensions = {};
     // for calls to Util.isDescendant()
     var nodeContainsWorksWithTextNodes = false;
     try {
-        var testParent = document.createElement('div'),
-            testText = document.createTextNode(' ');
+        var testParent = document.createElement("div"),
+            testText = document.createTextNode(" ");
         testParent.appendChild(testText);
         nodeContainsWorksWithTextNodes = testParent.contains(testText);
     } catch (exc) {}
 
     var Util = {
-
         // http://stackoverflow.com/questions/17907445/how-to-detect-ie11#comment30165888_17907562
         // by rg89
-        isIE: ((navigator.appName === 'Microsoft Internet Explorer') || ((navigator.appName === 'Netscape') && (new RegExp('Trident/.*rv:([0-9]{1,}[.0-9]{0,})').exec(navigator.userAgent) !== null))),
+        isIE:
+            navigator.appName === "Microsoft Internet Explorer" ||
+            (navigator.appName === "Netscape" &&
+                new RegExp("Trident/.*rv:([0-9]{1,}[.0-9]{0,})").exec(
+                    navigator.userAgent
+                ) !== null),
 
-        isEdge: (/Edge\/\d+/).exec(navigator.userAgent) !== null,
+        isEdge: /Edge\/\d+/.exec(navigator.userAgent) !== null,
 
         // if firefox
-        isFF: (navigator.userAgent.toLowerCase().indexOf('firefox') > -1),
+        isFF: navigator.userAgent.toLowerCase().indexOf("firefox") > -1,
 
         // http://stackoverflow.com/a/11752084/569101
-        isMac: (window.navigator.platform.toUpperCase().indexOf('MAC') >= 0),
+        isMac: window.navigator.platform.toUpperCase().indexOf("MAC") >= 0,
 
         // https://github.com/jashkenas/underscore
         // Lonely letter MUST USE the uppercase code
@@ -472,8 +478,11 @@ MediumEditor.extensions = {};
          * Returns true if it's metaKey on Mac, or ctrlKey on non-Mac.
          * See #591
          */
-        isMetaCtrlKey: function (event) {
-            if ((Util.isMac && event.metaKey) || (!Util.isMac && event.ctrlKey)) {
+        isMetaCtrlKey: function(event) {
+            if (
+                (Util.isMac && event.metaKey) ||
+                (!Util.isMac && event.ctrlKey)
+            ) {
                 return true;
             }
 
@@ -486,7 +495,7 @@ MediumEditor.extensions = {};
          * @see : https://github.com/jquery/jquery/blob/0705be475092aede1eddae01319ec931fb9c65fc/src/event.js#L473-L484
          * @see : http://stackoverflow.com/q/4471582/569101
          */
-        isKey: function (event, keys) {
+        isKey: function(event, keys) {
             var keyCode = Util.getKeyCode(event);
 
             // it's not an array let's just compare strings!
@@ -501,12 +510,13 @@ MediumEditor.extensions = {};
             return true;
         },
 
-        getKeyCode: function (event) {
+        getKeyCode: function(event) {
             var keyCode = event.which;
 
             // getting the key code from event
             if (null === keyCode) {
-                keyCode = event.charCode !== null ? event.charCode : event.keyCode;
+                keyCode =
+                    event.charCode !== null ? event.charCode : event.keyCode;
             }
 
             return keyCode;
@@ -514,15 +524,59 @@ MediumEditor.extensions = {};
 
         blockContainerElementNames: [
             // elements our editor generates
-            'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre', 'ul', 'li', 'ol',
+            "p",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "blockquote",
+            "pre",
+            "ul",
+            "li",
+            "ol",
             // all other known block elements
-            'address', 'article', 'aside', 'audio', 'canvas', 'dd', 'dl', 'dt', 'fieldset',
-            'figcaption', 'figure', 'footer', 'form', 'header', 'hgroup', 'main', 'nav',
-            'noscript', 'output', 'section', 'video',
-            'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td'
+            "address",
+            "article",
+            "aside",
+            "audio",
+            "canvas",
+            "dd",
+            "dl",
+            "dt",
+            "fieldset",
+            "figcaption",
+            "figure",
+            "footer",
+            "form",
+            "header",
+            "hgroup",
+            "main",
+            "nav",
+            "noscript",
+            "output",
+            "section",
+            "video",
+            "table",
+            "thead",
+            "tbody",
+            "tfoot",
+            "tr",
+            "th",
+            "td"
         ],
 
-        emptyElementNames: ['br', 'col', 'colgroup', 'hr', 'img', 'input', 'source', 'wbr'],
+        emptyElementNames: [
+            "br",
+            "col",
+            "colgroup",
+            "hr",
+            "img",
+            "input",
+            "source",
+            "wbr"
+        ],
 
         extend: function extend(/* dest, source1, source2, ...*/) {
             var args = [true].concat(Array.prototype.slice.call(arguments));
@@ -539,15 +593,19 @@ MediumEditor.extensions = {};
          * descendants of the same closest block container. If the preconditions are not met, unexpected
          * behavior will result.
          */
-        createLink: function (document, textNodes, href, target) {
-            var anchor = document.createElement('a');
-            Util.moveTextRangeIntoElement(textNodes[0], textNodes[textNodes.length - 1], anchor);
-            anchor.setAttribute('href', href);
+        createLink: function(document, textNodes, href, target) {
+            var anchor = document.createElement("a");
+            Util.moveTextRangeIntoElement(
+                textNodes[0],
+                textNodes[textNodes.length - 1],
+                anchor
+            );
+            anchor.setAttribute("href", href);
             if (target) {
-                if (target === '_blank') {
-                    anchor.setAttribute('rel', 'noopener noreferrer');
+                if (target === "_blank") {
+                    anchor.setAttribute("rel", "noopener noreferrer");
                 }
-                anchor.setAttribute('target', target);
+                anchor.setAttribute("target", target);
             }
             return anchor;
         },
@@ -561,8 +619,13 @@ MediumEditor.extensions = {};
          * The only DOM manipulation performed by this function is splitting the text nodes, non-text nodes are
          * not affected in any way.
          */
-        findOrCreateMatchingTextNodes: function (document, element, match) {
-            var treeWalker = document.createTreeWalker(element, NodeFilter.SHOW_ALL, null, false),
+        findOrCreateMatchingTextNodes: function(document, element, match) {
+            var treeWalker = document.createTreeWalker(
+                    element,
+                    NodeFilter.SHOW_ALL,
+                    null,
+                    false
+                ),
                 matchedNodes = [],
                 currentTextIndex = 0,
                 startReached = false,
@@ -573,17 +636,33 @@ MediumEditor.extensions = {};
                 if (currentNode.nodeType > 3) {
                     continue;
                 } else if (currentNode.nodeType === 3) {
-                    if (!startReached && match.start < (currentTextIndex + currentNode.nodeValue.length)) {
+                    if (
+                        !startReached &&
+                        match.start <
+                            currentTextIndex + currentNode.nodeValue.length
+                    ) {
                         startReached = true;
-                        newNode = Util.splitStartNodeIfNeeded(currentNode, match.start, currentTextIndex);
+                        newNode = Util.splitStartNodeIfNeeded(
+                            currentNode,
+                            match.start,
+                            currentTextIndex
+                        );
                     }
                     if (startReached) {
-                        Util.splitEndNodeIfNeeded(currentNode, newNode, match.end, currentTextIndex);
+                        Util.splitEndNodeIfNeeded(
+                            currentNode,
+                            newNode,
+                            match.end,
+                            currentTextIndex
+                        );
                     }
                     if (startReached && currentTextIndex === match.end) {
                         break; // Found the node(s) corresponding to the link. Break out and move on to the next.
-                    } else if (startReached && currentTextIndex > (match.end + 1)) {
-                        throw new Error('PerformLinking overshot the target!'); // should never happen...
+                    } else if (
+                        startReached &&
+                        currentTextIndex > match.end + 1
+                    ) {
+                        throw new Error("PerformLinking overshot the target!"); // should never happen...
                     }
 
                     if (startReached) {
@@ -597,8 +676,8 @@ MediumEditor.extensions = {};
                         treeWalker.nextNode();
                     }
                     newNode = null;
-                } else if (currentNode.tagName.toLowerCase() === 'img') {
-                    if (!startReached && (match.start <= currentTextIndex)) {
+                } else if (currentNode.tagName.toLowerCase() === "img") {
+                    if (!startReached && match.start <= currentTextIndex) {
                         startReached = true;
                     }
                     if (startReached) {
@@ -615,9 +694,15 @@ MediumEditor.extensions = {};
          *
          * This function is intended to be called from Util.findOrCreateMatchingTextNodes.
          */
-        splitStartNodeIfNeeded: function (currentNode, matchStartIndex, currentTextIndex) {
+        splitStartNodeIfNeeded: function(
+            currentNode,
+            matchStartIndex,
+            currentTextIndex
+        ) {
             if (matchStartIndex !== currentTextIndex) {
-                return currentNode.splitText(matchStartIndex - currentTextIndex);
+                return currentNode.splitText(
+                    matchStartIndex - currentTextIndex
+                );
             }
             return null;
         },
@@ -629,16 +714,27 @@ MediumEditor.extensions = {};
          *
          * This function is intended to be called from Util.findOrCreateMatchingTextNodes.
          */
-        splitEndNodeIfNeeded: function (currentNode, newNode, matchEndIndex, currentTextIndex) {
-            var textIndexOfEndOfFarthestNode,
-                endSplitPoint;
-            textIndexOfEndOfFarthestNode = currentTextIndex + currentNode.nodeValue.length +
-                    (newNode ? newNode.nodeValue.length : 0) - 1;
-            endSplitPoint = matchEndIndex - currentTextIndex -
-                    (newNode ? currentNode.nodeValue.length : 0);
-            if (textIndexOfEndOfFarthestNode >= matchEndIndex &&
-                    currentTextIndex !== textIndexOfEndOfFarthestNode &&
-                    endSplitPoint !== 0) {
+        splitEndNodeIfNeeded: function(
+            currentNode,
+            newNode,
+            matchEndIndex,
+            currentTextIndex
+        ) {
+            var textIndexOfEndOfFarthestNode, endSplitPoint;
+            textIndexOfEndOfFarthestNode =
+                currentTextIndex +
+                currentNode.nodeValue.length +
+                (newNode ? newNode.nodeValue.length : 0) -
+                1;
+            endSplitPoint =
+                matchEndIndex -
+                currentTextIndex -
+                (newNode ? currentNode.nodeValue.length : 0);
+            if (
+                textIndexOfEndOfFarthestNode >= matchEndIndex &&
+                currentTextIndex !== textIndexOfEndOfFarthestNode &&
+                endSplitPoint !== 0
+            ) {
                 (newNode || currentNode).splitText(endSplitPoint);
             }
         },
@@ -670,15 +766,20 @@ MediumEditor.extensions = {};
          * Since the <p> and <li>'s don't contain block elements and cover all the text content of the
          * <blockquote> container, they are the elements returned.
          */
-        splitByBlockElements: function (element) {
+        splitByBlockElements: function(element) {
             if (element.nodeType !== 3 && element.nodeType !== 1) {
                 return [];
             }
 
             var toRet = [],
-                blockElementQuery = MediumEditor.util.blockContainerElementNames.join(',');
+                blockElementQuery = MediumEditor.util.blockContainerElementNames.join(
+                    ","
+                );
 
-            if (element.nodeType === 3 || element.querySelectorAll(blockElementQuery).length === 0) {
+            if (
+                element.nodeType === 3 ||
+                element.querySelectorAll(blockElementQuery).length === 0
+            ) {
                 return [element];
             }
 
@@ -687,11 +788,15 @@ MediumEditor.extensions = {};
                 if (child.nodeType === 3) {
                     toRet.push(child);
                 } else if (child.nodeType === 1) {
-                    var blockElements = child.querySelectorAll(blockElementQuery);
+                    var blockElements = child.querySelectorAll(
+                        blockElementQuery
+                    );
                     if (blockElements.length === 0) {
                         toRet.push(child);
                     } else {
-                        toRet = toRet.concat(MediumEditor.util.splitByBlockElements(child));
+                        toRet = toRet.concat(
+                            MediumEditor.util.splitByBlockElements(child)
+                        );
                     }
                 }
             }
@@ -706,10 +811,19 @@ MediumEditor.extensions = {};
         //  - A descendant of a sibling element
         //  - A sibling text node of an ancestor
         //  - A descendant of a sibling element of an ancestor
-        findAdjacentTextNodeWithContent: function findAdjacentTextNodeWithContent(rootNode, targetNode, ownerDocument) {
+        findAdjacentTextNodeWithContent: function findAdjacentTextNodeWithContent(
+            rootNode,
+            targetNode,
+            ownerDocument
+        ) {
             var pastTarget = false,
                 nextNode,
-                nodeIterator = ownerDocument.createNodeIterator(rootNode, NodeFilter.SHOW_TEXT, null, false);
+                nodeIterator = ownerDocument.createNodeIterator(
+                    rootNode,
+                    NodeFilter.SHOW_TEXT,
+                    null,
+                    false
+                );
 
             // Use a native NodeIterator to iterate over all the text nodes that are descendants
             // of the rootNode.  Once past the targetNode, choose the first non-empty text node
@@ -718,7 +832,11 @@ MediumEditor.extensions = {};
                 if (nextNode === targetNode) {
                     pastTarget = true;
                 } else if (pastTarget) {
-                    if (nextNode.nodeType === 3 && nextNode.nodeValue && nextNode.nodeValue.trim().length > 0) {
+                    if (
+                        nextNode.nodeType === 3 &&
+                        nextNode.nodeValue &&
+                        nextNode.nodeValue.trim().length > 0
+                    ) {
                         break;
                     }
                 }
@@ -730,13 +848,16 @@ MediumEditor.extensions = {};
 
         // Find an element's previous sibling within a medium-editor element
         // If one doesn't exist, find the closest ancestor's previous sibling
-        findPreviousSibling: function (node) {
+        findPreviousSibling: function(node) {
             if (!node || Util.isMediumEditorElement(node)) {
                 return false;
             }
 
             var previousSibling = node.previousSibling;
-            while (!previousSibling && !Util.isMediumEditorElement(node.parentNode)) {
+            while (
+                !previousSibling &&
+                !Util.isMediumEditorElement(node.parentNode)
+            ) {
                 node = node.parentNode;
                 previousSibling = node.previousSibling;
             }
@@ -774,14 +895,14 @@ MediumEditor.extensions = {};
         },
 
         // https://github.com/jashkenas/underscore
-        throttle: function (func, wait) {
+        throttle: function(func, wait) {
             var THROTTLE_INTERVAL = 50,
                 context,
                 args,
                 result,
                 timeout = null,
                 previous = 0,
-                later = function () {
+                later = function() {
                     previous = Date.now();
                     timeout = null;
                     result = func.apply(context, args);
@@ -794,7 +915,7 @@ MediumEditor.extensions = {};
                 wait = THROTTLE_INTERVAL;
             }
 
-            return function () {
+            return function() {
                 var now = Date.now(),
                     remaining = wait - (now - previous);
 
@@ -817,7 +938,7 @@ MediumEditor.extensions = {};
             };
         },
 
-        traverseUp: function (current, testElementFunction) {
+        traverseUp: function(current, testElementFunction) {
             if (!current) {
                 return false;
             }
@@ -839,17 +960,27 @@ MediumEditor.extensions = {};
             return false;
         },
 
-        htmlEntities: function (str) {
+        htmlEntities: function(str) {
             // converts special characters (like <) into their escaped/encoded values (like &lt;).
             // This allows you to show to display the string without the browser reading it as HTML.
-            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
         },
 
         // http://stackoverflow.com/questions/6690752/insert-html-at-caret-in-a-contenteditable-div
-        insertHTMLCommand: function (doc, html) {
-            var selection, range, el, fragment, node, lastNode, toReplace,
+        insertHTMLCommand: function(doc, html) {
+            var selection,
+                range,
+                el,
+                fragment,
+                node,
+                lastNode,
+                toReplace,
                 res = false,
-                ecArgs = ['insertHTML', false, html];
+                ecArgs = ["insertHTML", false, html];
 
             /* Edge's implementation of insertHTML is just buggy right now:
              * - Doesn't allow leading white space at the beginning of an element
@@ -858,11 +989,13 @@ MediumEditor.extensions = {};
              * There are likely other bugs, these are just the ones we found so far.
              * For now, let's just use the same fallback we did for IE
              */
+            /*
             if (!MediumEditor.util.isEdge && doc.queryCommandSupported('insertHTML')) {
                 try {
                     return doc.execCommand.apply(doc, ecArgs);
                 } catch (ignore) {}
             }
+            */
 
             selection = doc.getSelection();
             if (selection.rangeCount) {
@@ -872,23 +1005,35 @@ MediumEditor.extensions = {};
                 // https://github.com/yabwe/medium-editor/issues/748
                 // If the selection is an empty editor element, create a temporary text node inside of the editor
                 // and select it so that we don't delete the editor element
-                if (Util.isMediumEditorElement(toReplace) && !toReplace.firstChild) {
-                    range.selectNode(toReplace.appendChild(doc.createTextNode('')));
-                } else if ((toReplace.nodeType === 3 && range.startOffset === 0 && range.endOffset === toReplace.nodeValue.length) ||
-                        (toReplace.nodeType !== 3 && toReplace.innerHTML === range.toString())) {
+                if (
+                    Util.isMediumEditorElement(toReplace) &&
+                    !toReplace.firstChild
+                ) {
+                    range.selectNode(
+                        toReplace.appendChild(doc.createTextNode(""))
+                    );
+                } else if (
+                    (toReplace.nodeType === 3 &&
+                        range.startOffset === 0 &&
+                        range.endOffset === toReplace.nodeValue.length) ||
+                    (toReplace.nodeType !== 3 &&
+                        toReplace.innerHTML === range.toString())
+                ) {
                     // Ensure range covers maximum amount of nodes as possible
                     // By moving up the DOM and selecting ancestors whose only child is the range
-                    while (!Util.isMediumEditorElement(toReplace) &&
-                            toReplace.parentNode &&
-                            toReplace.parentNode.childNodes.length === 1 &&
-                            !Util.isMediumEditorElement(toReplace.parentNode)) {
+                    while (
+                        !Util.isMediumEditorElement(toReplace) &&
+                        toReplace.parentNode &&
+                        toReplace.parentNode.childNodes.length === 1 &&
+                        !Util.isMediumEditorElement(toReplace.parentNode)
+                    ) {
                         toReplace = toReplace.parentNode;
                     }
                     range.selectNode(toReplace);
                 }
                 range.deleteContents();
 
-                el = doc.createElement('div');
+                el = doc.createElement("div");
                 el.innerHTML = html;
                 fragment = doc.createDocumentFragment();
                 while (el.firstChild) {
@@ -915,67 +1060,83 @@ MediumEditor.extensions = {};
             return res;
         },
 
-        execFormatBlock: function (doc, tagName) {
+        execFormatBlock: function(doc, tagName) {
             // Get the top level block element that contains the selection
-            var blockContainer = Util.getTopBlockContainer(MediumEditor.selection.getSelectionStart(doc)),
+            var blockContainer = Util.getTopBlockContainer(
+                    MediumEditor.selection.getSelectionStart(doc)
+                ),
                 childNodes;
 
             // Special handling for blockquote
-            if (tagName === 'blockquote') {
+            if (tagName === "blockquote") {
                 if (blockContainer) {
-                    childNodes = Array.prototype.slice.call(blockContainer.childNodes);
+                    childNodes = Array.prototype.slice.call(
+                        blockContainer.childNodes
+                    );
                     // Check if the blockquote has a block element as a child (nested blocks)
-                    if (childNodes.some(function (childNode) {
-                        return Util.isBlockContainer(childNode);
-                    })) {
+                    if (
+                        childNodes.some(function(childNode) {
+                            return Util.isBlockContainer(childNode);
+                        })
+                    ) {
                         // FF handles blockquote differently on formatBlock
                         // allowing nesting, we need to use outdent
                         // https://developer.mozilla.org/en-US/docs/Rich-Text_Editing_in_Mozilla
-                        return doc.execCommand('outdent', false, null);
+                        return doc.execCommand("outdent", false, null);
                     }
                 }
 
                 // When IE blockquote needs to be called as indent
                 // http://stackoverflow.com/questions/1816223/rich-text-editor-with-blockquote-function/1821777#1821777
                 if (Util.isIE) {
-                    return doc.execCommand('indent', false, tagName);
+                    return doc.execCommand("indent", false, tagName);
                 }
             }
 
             // If the blockContainer is already the element type being passed in
             // treat it as 'undo' formatting and just convert it to a <p>
-            if (blockContainer && tagName === blockContainer.nodeName.toLowerCase()) {
-                tagName = 'p';
+            if (
+                blockContainer &&
+                tagName === blockContainer.nodeName.toLowerCase()
+            ) {
+                tagName = "p";
             }
 
             // When IE we need to add <> to heading elements
             // http://stackoverflow.com/questions/10741831/execcommand-formatblock-headings-in-ie
             if (Util.isIE) {
-                tagName = '<' + tagName + '>';
+                tagName = "<" + tagName + ">";
             }
 
             // When FF, IE and Edge, we have to handle blockquote node seperately as 'formatblock' does not work.
             // https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand#Commands
-            if (blockContainer && blockContainer.nodeName.toLowerCase() === 'blockquote') {
+            if (
+                blockContainer &&
+                blockContainer.nodeName.toLowerCase() === "blockquote"
+            ) {
                 // For IE, just use outdent
-                if (Util.isIE && tagName === '<p>') {
-                    return doc.execCommand('outdent', false, tagName);
+                if (Util.isIE && tagName === "<p>") {
+                    return doc.execCommand("outdent", false, tagName);
                 }
 
                 // For Firefox and Edge, make sure there's a nested block element before calling outdent
-                if ((Util.isFF || Util.isEdge) && tagName === 'p') {
-                    childNodes = Array.prototype.slice.call(blockContainer.childNodes);
+                if ((Util.isFF || Util.isEdge) && tagName === "p") {
+                    childNodes = Array.prototype.slice.call(
+                        blockContainer.childNodes
+                    );
                     // If there are some non-block elements we need to wrap everything in a <p> before we outdent
-                    if (childNodes.some(function (childNode) {
-                        return !Util.isBlockContainer(childNode);
-                    })) {
-                        doc.execCommand('formatBlock', false, tagName);
+                    if (
+                        childNodes.some(function(childNode) {
+                            return !Util.isBlockContainer(childNode);
+                        })
+                    ) {
+                        doc.execCommand("formatBlock", false, tagName);
                     }
-                    return doc.execCommand('outdent', false, tagName);
+                    return doc.execCommand("outdent", false, tagName);
                 }
             }
 
-            return doc.execCommand('formatBlock', false, tagName);
+            return doc.execCommand("formatBlock", false, tagName);
         },
 
         /**
@@ -988,18 +1149,19 @@ MediumEditor.extensions = {};
          * using `anchorUrl` to ensure that we are adding target="_blank" on the good one.
          * This isn't a bulletproof solution anyway ..
          */
-        setTargetBlank: function (el, anchorUrl) {
-            var i, url = anchorUrl || false;
-            if (el.nodeName.toLowerCase() === 'a') {
-                el.target = '_blank';
-                el.rel = 'noopener noreferrer';
+        setTargetBlank: function(el, anchorUrl) {
+            var i,
+                url = anchorUrl || false;
+            if (el.nodeName.toLowerCase() === "a") {
+                el.target = "_blank";
+                el.rel = "noopener noreferrer";
             } else {
-                el = el.getElementsByTagName('a');
+                el = el.getElementsByTagName("a");
 
                 for (i = 0; i < el.length; i += 1) {
                     if (false === url || url === el[i].attributes.href.value) {
-                        el[i].target = '_blank';
-                        el[i].rel = 'noopener noreferrer';
+                        el[i].target = "_blank";
+                        el[i].rel = "noopener noreferrer";
                     }
                 }
             }
@@ -1009,18 +1171,18 @@ MediumEditor.extensions = {};
          * this function is called to explicitly remove the target='_blank' as FF holds on to _blank value even
          * after unchecking the checkbox on anchor form
          */
-        removeTargetBlank: function (el, anchorUrl) {
+        removeTargetBlank: function(el, anchorUrl) {
             var i;
-            if (el.nodeName.toLowerCase() === 'a') {
-                el.removeAttribute('target');
-                el.removeAttribute('rel');
+            if (el.nodeName.toLowerCase() === "a") {
+                el.removeAttribute("target");
+                el.removeAttribute("rel");
             } else {
-                el = el.getElementsByTagName('a');
+                el = el.getElementsByTagName("a");
 
                 for (i = 0; i < el.length; i += 1) {
                     if (anchorUrl === el[i].attributes.href.value) {
-                        el[i].removeAttribute('target');
-                        el[i].removeAttribute('rel');
+                        el[i].removeAttribute("target");
+                        el[i].removeAttribute("rel");
                     }
                 }
             }
@@ -1031,18 +1193,18 @@ MediumEditor.extensions = {};
          * if el parameter is not an a, it will look for a children of el.
          * if no a children are found, it will look for the a parent.
          */
-        addClassToAnchors: function (el, buttonClass) {
-            var classes = buttonClass.split(' '),
+        addClassToAnchors: function(el, buttonClass) {
+            var classes = buttonClass.split(" "),
                 i,
                 j;
-            if (el.nodeName.toLowerCase() === 'a') {
+            if (el.nodeName.toLowerCase() === "a") {
                 for (j = 0; j < classes.length; j += 1) {
                     el.classList.add(classes[j]);
                 }
             } else {
-                var aChildren = el.getElementsByTagName('a');
+                var aChildren = el.getElementsByTagName("a");
                 if (aChildren.length === 0) {
-                    var parentAnchor = Util.getClosestTag(el, 'a');
+                    var parentAnchor = Util.getClosestTag(el, "a");
                     el = parentAnchor ? [parentAnchor] : [];
                 } else {
                     el = aChildren;
@@ -1055,18 +1217,21 @@ MediumEditor.extensions = {};
             }
         },
 
-        isListItem: function (node) {
+        isListItem: function(node) {
             if (!node) {
                 return false;
             }
-            if (node.nodeName.toLowerCase() === 'li') {
+            if (node.nodeName.toLowerCase() === "li") {
                 return true;
             }
 
             var parentNode = node.parentNode,
                 tagName = parentNode.nodeName.toLowerCase();
-            while (tagName === 'li' || (!Util.isBlockContainer(parentNode) && tagName !== 'div')) {
-                if (tagName === 'li') {
+            while (
+                tagName === "li" ||
+                (!Util.isBlockContainer(parentNode) && tagName !== "div")
+            ) {
+                if (tagName === "li") {
                     return true;
                 }
                 parentNode = parentNode.parentNode;
@@ -1079,19 +1244,24 @@ MediumEditor.extensions = {};
             return false;
         },
 
-        cleanListDOM: function (ownerDocument, element) {
-            if (element.nodeName.toLowerCase() !== 'li') {
+        cleanListDOM: function(ownerDocument, element) {
+            if (element.nodeName.toLowerCase() !== "li") {
                 return;
             }
 
             var list = element.parentElement;
 
-            if (list.parentElement.nodeName.toLowerCase() === 'p') { // yes we need to clean up
+            if (list.parentElement.nodeName.toLowerCase() === "p") {
+                // yes we need to clean up
                 Util.unwrap(list.parentElement, ownerDocument);
 
                 // move cursor at the end of the text inside the list
                 // for some unknown reason, the cursor is moved to end of the "visual" line
-                MediumEditor.selection.moveCursor(ownerDocument, element.firstChild, element.firstChild.textContent.length);
+                MediumEditor.selection.moveCursor(
+                    ownerDocument,
+                    element.firstChild,
+                    element.firstChild.textContent.length
+                );
             }
         },
 
@@ -1125,7 +1295,7 @@ MediumEditor.extensions = {};
          *  would remain in place where it was
          *
         */
-        splitOffDOMTree: function (rootNode, leafNode, splitLeft) {
+        splitOffDOMTree: function(rootNode, leafNode, splitLeft) {
             var splitOnNode = leafNode,
                 createdNode = null,
                 splitRight = !splitLeft;
@@ -1134,7 +1304,9 @@ MediumEditor.extensions = {};
             while (splitOnNode !== rootNode) {
                 var currParent = splitOnNode.parentNode,
                     newParent = currParent.cloneNode(false),
-                    targetNode = (splitRight ? splitOnNode : currParent.firstChild),
+                    targetNode = splitRight
+                        ? splitOnNode
+                        : currParent.firstChild,
                     appendLast;
 
                 // Create a new parent element which is a clone of the current parent
@@ -1165,12 +1337,15 @@ MediumEditor.extensions = {};
                             createdNode.appendChild(targetNode);
                         }
 
-                        targetNode = (splitRight ? sibling : null);
+                        targetNode = splitRight ? sibling : null;
                     } else {
                         // For general case, just remove the element and only
                         // add it to the split tree if it contains something
                         targetNode.parentNode.removeChild(targetNode);
-                        if (targetNode.hasChildNodes() || targetNode.textContent) {
+                        if (
+                            targetNode.hasChildNodes() ||
+                            targetNode.textContent
+                        ) {
                             createdNode.appendChild(targetNode);
                         }
 
@@ -1189,7 +1364,7 @@ MediumEditor.extensions = {};
             return createdNode;
         },
 
-        moveTextRangeIntoElement: function (startNode, endNode, newElement) {
+        moveTextRangeIntoElement: function(startNode, endNode, newElement) {
             if (!startNode || !endNode) {
                 return false;
             }
@@ -1242,11 +1417,13 @@ MediumEditor.extensions = {};
                 firstChild.parentNode.removeChild(firstChild);
                 fragment.appendChild(firstChild);
             } else {
-                fragment.appendChild(Util.splitOffDOMTree(firstChild, startNode));
+                fragment.appendChild(
+                    Util.splitOffDOMTree(firstChild, startNode)
+                );
             }
 
             // add any elements between firstChild & lastChild
-            rootChildren.forEach(function (element) {
+            rootChildren.forEach(function(element) {
                 element.parentNode.removeChild(element);
                 fragment.appendChild(element);
             });
@@ -1256,7 +1433,9 @@ MediumEditor.extensions = {};
                 lastChild.parentNode.removeChild(lastChild);
                 fragment.appendChild(lastChild);
             } else {
-                fragment.appendChild(Util.splitOffDOMTree(lastChild, endNode, true));
+                fragment.appendChild(
+                    Util.splitOffDOMTree(lastChild, endNode, true)
+                );
             }
 
             // Add fragment into passed in element
@@ -1277,7 +1456,7 @@ MediumEditor.extensions = {};
         },
 
         /* based on http://stackoverflow.com/a/6183069 */
-        depthOfNode: function (inNode) {
+        depthOfNode: function(inNode) {
             var theDepth = 0,
                 node = inNode;
             while (node.parentNode !== null) {
@@ -1287,7 +1466,7 @@ MediumEditor.extensions = {};
             return theDepth;
         },
 
-        findCommonRoot: function (inNode1, inNode2) {
+        findCommonRoot: function(inNode1, inNode2) {
             var depth1 = Util.depthOfNode(inNode1),
                 depth2 = Util.depthOfNode(inNode2),
                 node1 = inNode1,
@@ -1312,13 +1491,18 @@ MediumEditor.extensions = {};
         },
         /* END - based on http://stackoverflow.com/a/6183069 */
 
-        isElementAtBeginningOfBlock: function (node) {
-            var textVal,
-                sibling;
-            while (!Util.isBlockContainer(node) && !Util.isMediumEditorElement(node)) {
+        isElementAtBeginningOfBlock: function(node) {
+            var textVal, sibling;
+            while (
+                !Util.isBlockContainer(node) &&
+                !Util.isMediumEditorElement(node)
+            ) {
                 sibling = node;
-                while (sibling = sibling.previousSibling) {
-                    textVal = sibling.nodeType === 3 ? sibling.nodeValue : sibling.textContent;
+                while ((sibling = sibling.previousSibling)) {
+                    textVal =
+                        sibling.nodeType === 3
+                            ? sibling.nodeValue
+                            : sibling.textContent;
                     if (textVal.length > 0) {
                         return false;
                     }
@@ -1328,27 +1512,40 @@ MediumEditor.extensions = {};
             return true;
         },
 
-        isMediumEditorElement: function (element) {
-            return element && element.getAttribute && !!element.getAttribute('data-medium-editor-element');
+        isMediumEditorElement: function(element) {
+            return (
+                element &&
+                element.getAttribute &&
+                !!element.getAttribute("data-medium-editor-element")
+            );
         },
 
-        getContainerEditorElement: function (element) {
-            return Util.traverseUp(element, function (node) {
+        getContainerEditorElement: function(element) {
+            return Util.traverseUp(element, function(node) {
                 return Util.isMediumEditorElement(node);
             });
         },
 
-        isBlockContainer: function (element) {
-            return element && element.nodeType !== 3 && Util.blockContainerElementNames.indexOf(element.nodeName.toLowerCase()) !== -1;
+        isBlockContainer: function(element) {
+            return (
+                element &&
+                element.nodeType !== 3 &&
+                Util.blockContainerElementNames.indexOf(
+                    element.nodeName.toLowerCase()
+                ) !== -1
+            );
         },
 
         /* Finds the closest ancestor which is a block container element
          * If element is within editor element but not within any other block element,
          * the editor element is returned
          */
-        getClosestBlockContainer: function (node) {
-            return Util.traverseUp(node, function (node) {
-                return Util.isBlockContainer(node) || Util.isMediumEditorElement(node);
+        getClosestBlockContainer: function(node) {
+            return Util.traverseUp(node, function(node) {
+                return (
+                    Util.isBlockContainer(node) ||
+                    Util.isMediumEditorElement(node)
+                );
             });
         },
 
@@ -1356,9 +1553,9 @@ MediumEditor.extensions = {};
          * If element is within editor element but not within any other block element,
          * the editor element is returned
          */
-        getTopBlockContainer: function (element) {
+        getTopBlockContainer: function(element) {
             var topBlock = Util.isBlockContainer(element) ? element : false;
-            Util.traverseUp(element, function (el) {
+            Util.traverseUp(element, function(el) {
                 if (Util.isBlockContainer(el)) {
                     topBlock = el;
                 }
@@ -1371,18 +1568,22 @@ MediumEditor.extensions = {};
             return topBlock;
         },
 
-        getFirstSelectableLeafNode: function (element) {
+        getFirstSelectableLeafNode: function(element) {
             while (element && element.firstChild) {
                 element = element.firstChild;
             }
 
             // We don't want to set the selection to an element that can't have children, this messes up Gecko.
-            element = Util.traverseUp(element, function (el) {
-                return Util.emptyElementNames.indexOf(el.nodeName.toLowerCase()) === -1;
+            element = Util.traverseUp(element, function(el) {
+                return (
+                    Util.emptyElementNames.indexOf(
+                        el.nodeName.toLowerCase()
+                    ) === -1
+                );
             });
             // Selecting at the beginning of a table doesn't work in PhantomJS.
-            if (element.nodeName.toLowerCase() === 'table') {
-                var firstCell = element.querySelector('th, td');
+            if (element.nodeName.toLowerCase() === "table") {
+                var firstCell = element.querySelector("th, td");
                 if (firstCell) {
                     element = firstCell;
                 }
@@ -1391,12 +1592,14 @@ MediumEditor.extensions = {};
         },
 
         // TODO: remove getFirstTextNode AND _getFirstTextNode when jumping in 6.0.0 (no code references)
-        getFirstTextNode: function (element) {
-            Util.warn('getFirstTextNode is deprecated and will be removed in version 6.0.0');
+        getFirstTextNode: function(element) {
+            Util.warn(
+                "getFirstTextNode is deprecated and will be removed in version 6.0.0"
+            );
             return Util._getFirstTextNode(element);
         },
 
-        _getFirstTextNode: function (element) {
+        _getFirstTextNode: function(element) {
             if (element.nodeType === 3) {
                 return element;
             }
@@ -1410,62 +1613,66 @@ MediumEditor.extensions = {};
             return null;
         },
 
-        ensureUrlHasProtocol: function (url) {
-            if (url.indexOf('://') === -1) {
-                return 'http://' + url;
+        ensureUrlHasProtocol: function(url) {
+            if (url.indexOf("://") === -1) {
+                return "http://" + url;
             }
             return url;
         },
 
-        warn: function () {
-            if (window.console !== undefined && typeof window.console.warn === 'function') {
+        warn: function() {
+            if (
+                window.console !== undefined &&
+                typeof window.console.warn === "function"
+            ) {
                 window.console.warn.apply(window.console, arguments);
             }
         },
 
-        deprecated: function (oldName, newName, version) {
+        deprecated: function(oldName, newName, version) {
             // simple deprecation warning mechanism.
-            var m = oldName + ' is deprecated, please use ' + newName + ' instead.';
+            var m =
+                oldName + " is deprecated, please use " + newName + " instead.";
             if (version) {
-                m += ' Will be removed in ' + version;
+                m += " Will be removed in " + version;
             }
             Util.warn(m);
         },
 
-        deprecatedMethod: function (oldName, newName, args, version) {
+        deprecatedMethod: function(oldName, newName, args, version) {
             // run the replacement and warn when someone calls a deprecated method
             Util.deprecated(oldName, newName, version);
-            if (typeof this[newName] === 'function') {
+            if (typeof this[newName] === "function") {
                 this[newName].apply(this, args);
             }
         },
 
-        cleanupAttrs: function (el, attrs) {
-            attrs.forEach(function (attr) {
+        cleanupAttrs: function(el, attrs) {
+            attrs.forEach(function(attr) {
                 el.removeAttribute(attr);
             });
         },
 
-        cleanupTags: function (el, tags) {
+        cleanupTags: function(el, tags) {
             if (tags.indexOf(el.nodeName.toLowerCase()) !== -1) {
                 el.parentNode.removeChild(el);
             }
         },
 
-        unwrapTags: function (el, tags) {
+        unwrapTags: function(el, tags) {
             if (tags.indexOf(el.nodeName.toLowerCase()) !== -1) {
                 MediumEditor.util.unwrap(el, document);
             }
         },
 
         // get the closest parent
-        getClosestTag: function (el, tag) {
-            return Util.traverseUp(el, function (element) {
+        getClosestTag: function(el, tag) {
+            return Util.traverseUp(el, function(element) {
                 return element.nodeName.toLowerCase() === tag.toLowerCase();
             });
         },
 
-        unwrap: function (el, doc) {
+        unwrap: function(el, doc) {
             var fragment = doc.createDocumentFragment(),
                 nodes = Array.prototype.slice.call(el.childNodes);
 
@@ -1482,20 +1689,32 @@ MediumEditor.extensions = {};
             }
         },
 
-        guid: function () {
+        guid: function() {
             function _s4() {
-                return Math
-                    .floor((1 + Math.random()) * 0x10000)
+                return Math.floor((1 + Math.random()) * 0x10000)
                     .toString(16)
                     .substring(1);
             }
 
-            return _s4() + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + _s4() + _s4();
+            return (
+                _s4() +
+                _s4() +
+                "-" +
+                _s4() +
+                "-" +
+                _s4() +
+                "-" +
+                _s4() +
+                "-" +
+                _s4() +
+                _s4() +
+                _s4()
+            );
         }
     };
 
     MediumEditor.util = Util;
-}(window));
+})(window);
 
 (function () {
     'use strict';
