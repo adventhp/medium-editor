@@ -5440,7 +5440,7 @@ MediumEditor.extensions = {};
 
             // Microsoft Word makes these odd tags, like <o:p></o:p>
             [new RegExp(/<\/?o:[a-z]*>/gi), ""],
-            [new RegExp(/&nbsp;/g), "<br />"],
+            [new RegExp(/&nbsp;<\/p>/g), "<br /></p>"],
 
             // Microsoft Word adds some special elements around list items
             [
