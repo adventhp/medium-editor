@@ -81,7 +81,9 @@
             // Microsoft Word makes these odd tags, like <o:p></o:p>
             [new RegExp(/<\/?o:[a-z]*>/gi), ""],
             [new RegExp(/&nbsp;<\/p>/g), "<br /></p>"],
-            [new RegExp(/\<v:.*(\<\/v:\w+)\>/gi), ""],
+            //[new RegExp(/\<v:.*(\<\/v:\w+)\>/gi), ""],
+            //[new RegExp(/(<(v|o|w):[^>]*>\s*|\s*<\/(v|o|w):[^>]*>)/g), ""],
+            [new RegExp(/(&lt;(v|o|w):[^>]*&gt;)/g), ""],
 
             // Microsoft Word adds some special elements around list items
             [
