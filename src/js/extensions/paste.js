@@ -84,7 +84,7 @@
             //[new RegExp(/\<v:.*(\<\/v:\w+)\>/gi), ""],
             //[new RegExp(/(<(v|o|w):[^>]*>\s*|\s*<\/(v|o|w):[^>]*>)/g), ""],
             //new RegExp(/(&lt;(v|o|w):[^>]*&gt;)/g), ""],
-            [new RegExp(/&lt;(\/)?(v|o|w):.+?&gt;/g), ""],
+            [new RegExp(/&lt;(\/)?(v|o|w):.+?&gt;/gm), ""],
 
             // Microsoft Word adds some special elements around list items
             [
