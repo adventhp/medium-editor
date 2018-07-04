@@ -27,7 +27,13 @@
     "email": "hi@daviferreira.com"
   },
   "homepage": "http://yabwe.github.io/medium-editor/",
-  "keywords": ["contenteditable", "editor", "medium", "wysiwyg", "rich-text"],
+  "keywords": [
+    "contenteditable",
+    "editor",
+    "medium",
+    "wysiwyg",
+    "rich-text"
+  ],
   "publishConfig": {
     "registry": "http://registry.npmjs.org/"
   },

@@ -614,7 +614,9 @@
         if (justifyAction.exec(action)) {
             var result = this.options.ownerDocument.execCommand(action, false, null),
                 parentNode = MediumEditor.selection.getSelectedParentElement(MediumEditor.selection.getSelectionRange(this.options.ownerDocument));
-            if (parentNode) {
+            
+            /* Limiting editor operations (alignment, create table, etc.) to work only when editor element is in focus */
+            if (parentNode && parentNode.parentNode.className.includes('medium-editor-element')) {
                 cleanupJustifyDivFragments.call(this, MediumEditor.util.getTopBlockContainer(parentNode));
             }
 
