@@ -898,9 +898,7 @@
             while (splitOnNode !== rootNode) {
                 var currParent = splitOnNode.parentNode,
                     newParent = currParent.cloneNode(false),
-                    targetNode = splitRight
-                        ? splitOnNode
-                        : currParent.firstChild,
+                    targetNode = splitRight ? splitOnNode : currParent.firstChild,
                     appendLast;
 
                 // Create a new parent element which is a clone of the current parent
@@ -1094,9 +1092,7 @@
                 sibling = node;
                 while ((sibling = sibling.previousSibling)) {
                     textVal =
-                        sibling.nodeType === 3
-                            ? sibling.nodeValue
-                            : sibling.textContent;
+                        sibling.nodeType === 3 ? sibling.nodeValue : sibling.textContent;
                     if (textVal.length > 0) {
                         return false;
                     }

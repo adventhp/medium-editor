@@ -382,7 +382,7 @@
 
             var pasteBinElm = this.document.createElement("div");
             pasteBinElm.id = this.pasteBinId =
-                "medium-editor-pastebin-" + +Date.now();
+                "medium-editor-pastebin-" + Date.now();
             pasteBinElm.setAttribute(
                 "style",
                 "border: 1px red solid; position: absolute; top: " +
@@ -505,7 +505,7 @@
                 switch (workEl.nodeName.toLowerCase()) {
                     case "p":
                     case "div":
-                        this.filterCommonBlocks(workEl);
+                        this.filterCommonBlocks();
                         break;
                     case "br":
                         this.filterLineBreak(workEl);
@@ -572,7 +572,7 @@
         },
 
         // TODO (6.0): Make this an internal helper instead of member of paste handler
-        filterCommonBlocks: function(el) {
+        filterCommonBlocks: function() {
             /*
             #2415 - removed for pasting from Word
             if (/^\s*$/.test(el.textContent) && el.parentNode) {

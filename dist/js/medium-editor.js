@@ -1304,9 +1304,7 @@ MediumEditor.extensions = {};
             while (splitOnNode !== rootNode) {
                 var currParent = splitOnNode.parentNode,
                     newParent = currParent.cloneNode(false),
-                    targetNode = splitRight
-                        ? splitOnNode
-                        : currParent.firstChild,
+                    targetNode = splitRight ? splitOnNode : currParent.firstChild,
                     appendLast;
 
                 // Create a new parent element which is a clone of the current parent
@@ -1500,9 +1498,7 @@ MediumEditor.extensions = {};
                 sibling = node;
                 while ((sibling = sibling.previousSibling)) {
                     textVal =
-                        sibling.nodeType === 3
-                            ? sibling.nodeValue
-                            : sibling.textContent;
+                        sibling.nodeType === 3 ? sibling.nodeValue : sibling.textContent;
                     if (textVal.length > 0) {
                         return false;
                     }
@@ -5742,7 +5738,7 @@ MediumEditor.extensions = {};
 
             var pasteBinElm = this.document.createElement("div");
             pasteBinElm.id = this.pasteBinId =
-                "medium-editor-pastebin-" + +Date.now();
+                "medium-editor-pastebin-" + Date.now();
             pasteBinElm.setAttribute(
                 "style",
                 "border: 1px red solid; position: absolute; top: " +
@@ -5865,7 +5861,7 @@ MediumEditor.extensions = {};
                 switch (workEl.nodeName.toLowerCase()) {
                     case "p":
                     case "div":
-                        this.filterCommonBlocks(workEl);
+                        this.filterCommonBlocks();
                         break;
                     case "br":
                         this.filterLineBreak(workEl);
@@ -5932,7 +5928,7 @@ MediumEditor.extensions = {};
         },
 
         // TODO (6.0): Make this an internal helper instead of member of paste handler
-        filterCommonBlocks: function(el) {
+        filterCommonBlocks: function() {
             /*
             #2415 - removed for pasting from Word
             if (/^\s*$/.test(el.textContent) && el.parentNode) {
@@ -7518,7 +7514,9 @@ MediumEditor.extensions = {};
         if (justifyAction.exec(action)) {
             var result = this.options.ownerDocument.execCommand(action, false, null),
                 parentNode = MediumEditor.selection.getSelectedParentElement(MediumEditor.selection.getSelectionRange(this.options.ownerDocument));
-            if (parentNode) {
+            
+            /* Limiting editor operations (alignment, create table, etc.) to work only when editor element is in focus */
+            if (parentNode && parentNode.parentNode.className.includes('medium-editor-element')) {
                 cleanupJustifyDivFragments.call(this, MediumEditor.util.getTopBlockContainer(parentNode));
             }
 
