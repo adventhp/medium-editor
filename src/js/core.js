@@ -1192,7 +1192,13 @@
 
             if (this.elements[index]) {
                 var target = this.elements[index];
-                target.innerHTML = html;
+                var event = this.options.ownerDocument.createEvent(
+                    "TextEvent"
+                );
+
+                event.initTextEvent("textInput", true, true, null, html);
+                target.dispatchEvent(event); // fire the event on the the textarea
+
                 this.checkContentChanged(target);
             }
         },
