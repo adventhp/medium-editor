@@ -1192,12 +1192,7 @@
 
             if (this.elements[index]) {
                 var target = this.elements[index];
-                var event = this.options.ownerDocument.createEvent(
-                    "TextEvent"
-                );
-
-                event.initTextEvent("textInput", true, true, null, html);
-                target.dispatchEvent(event); // fire the event on the the textarea
+                target.innerHTML = html;
 
                 this.checkContentChanged(target);
             }
