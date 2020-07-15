@@ -941,7 +941,19 @@
 
             // do some DOM clean-up for known browser issues after the action
             if (action === 'insertunorderedlist' || action === 'insertorderedlist') {
-                MediumEditor.util.cleanListDOM(this.options.ownerDocument, this.getSelectedParentElement());
+                let el=this.getSelectedParentElement();
+                MediumEditor.util.cleanListDOM(this.options.ownerDocument, el);
+               
+                if (el.innerText && document.createRange) {
+                    
+                        let selection = document.getSelection();
+                        let range = document.createRange();
+                        range.setStart(el.childNodes[0], el.childNodes[0].length);
+                        range.collapse(true);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                   
+                }
             }
 
             this.checkSelection();
