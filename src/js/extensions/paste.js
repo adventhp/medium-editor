@@ -493,7 +493,7 @@
                 "<p>" + text.split("<br><br>").join("</p><p>") + "</p>";
 
             // block element cleanup
-            elList = tmp.querySelectorAll("a,p,div,br");
+            elList = tmp.querySelectorAll("a,p,div");
             for (i = 0; i < elList.length; i += 1) {
                 workEl = elList[i];
 
