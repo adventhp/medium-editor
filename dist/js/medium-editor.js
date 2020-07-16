@@ -5849,7 +5849,7 @@ MediumEditor.extensions = {};
                 "<p>" + text.split("<br><br>").join("</p><p>") + "</p>";
 
             // block element cleanup
-            elList = tmp.querySelectorAll("a,p,div,br");
+            elList = tmp.querySelectorAll("a,p,div");
             for (i = 0; i < elList.length; i += 1) {
                 workEl = elList[i];
 
@@ -7841,7 +7841,19 @@ MediumEditor.extensions = {};
 
             // do some DOM clean-up for known browser issues after the action
             if (action === 'insertunorderedlist' || action === 'insertorderedlist') {
-                MediumEditor.util.cleanListDOM(this.options.ownerDocument, this.getSelectedParentElement());
+                let el=this.getSelectedParentElement();
+                MediumEditor.util.cleanListDOM(this.options.ownerDocument, el);
+               
+                if (el.innerText && document.createRange) {
+                    
+                        let selection = document.getSelection();
+                        let range = document.createRange();
+                        range.setStart(el.childNodes[0], el.childNodes[0].length);
+                        range.collapse(true);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                   
+                }
             }
 
             this.checkSelection();
@@ -8093,6 +8105,7 @@ MediumEditor.extensions = {};
             if (this.elements[index]) {
                 var target = this.elements[index];
                 target.innerHTML = html;
+
                 this.checkContentChanged(target);
             }
         },
